@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M2 DevExt</title>
+  <link href="popup.css" rel="stylesheet">
+</head>
+<body>
+  <div class="main_content">
+
+    <div class="heading">
+      <h3>Magento2 Developer Extension</h3>
+    </div>
+
+    <form class="main_form">
+      <input class="form_control" placeholder="URL"/>
+
+      <div class="template_path">
+        <div class="label">
+          Template pathing
+        </div>
+        <div class="content">
+          <input type="checkbox" class="toggle" name="tempath" id="toggle">
+          <label for="toggle" class="toggle_btn"></label>
+        </div>
+      </div>
+
+      <button class="btn_primary" id="clearCache">Clear Cache</button>
+      <button class="btn_primary" id="cacheFlush">Cache Flush</button>
+      <button class="btn_primary">Clear/Generate Static Files</button>
+      <button class="btn_primary">Launch Admnin</button>
+    </form>
+
+    <p class="msg success_msg">
+      <strong>Success!</strong> Cache Cleared!
+    </p>
+
+    <div class="template_path">
+      <div class="label">
+        Dark Mode
+      </div>
+      <div class="content">
+        <input type="checkbox" class="toggle" name="dark_toggle" id="dark_toggle">
+        <label for="dark_toggle" class="toggle_btn"></label>
+      </div>
+    </div>
+
+    <div class="owner">
+      <p>
+        Created by Arvind G & KrishnaKumar K
+      </p>
+      <p>
+        version 0.0.1
+      </p>
+    </div>
+  </div>
+</body>
+</html>
