@@ -68,10 +68,17 @@ body {
   padding: 0.5em;
   border: 0;
   width: 100%;
+  display: none;
 }
 
 .success_msg {
   background: hsla(94, 48%, 56%, 0.2);
+  display: block;
+}
+
+.error_msg {
+  background: hsla(0, 95%, 46%, 0.2);
+  display: block;
 }
 
 .owner {
