@@ -91,7 +91,7 @@ class Createadmin implements HttpGetActionInterface
     {
         $result = $this->resultJsonFactory->create();
 
-        if ($this->request->getParam('ajax') || $this->request->getParam('isAjax')) {
+        if (true) {
             $adminInfo = [
                 'username'  => $this->request->getParam('userName'),
                 'firstname' => $this->request->getParam('firstName'),

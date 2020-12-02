@@ -24,8 +24,8 @@ body.dark {
   position: absolute;
   top: -8%;
   left: -7%;
-  width: 1.5em;
-  height: 1.5em;
+  width: 1.2em;
+  height: 1.2em;
 }
 .setting:hover {
   cursor: pointer;
@@ -46,7 +46,7 @@ body.dark {
   max-width: 100%;
   line-height: 1.2;
   background-color: hsl(0, 0%, 100%);
-  border: 2px solid hsl(0, 0%, 95%);
+  border: 2px solid #d6d6d6;
   padding: 0.5em;
   transition: 0.2s;
   margin-bottom: 10px;

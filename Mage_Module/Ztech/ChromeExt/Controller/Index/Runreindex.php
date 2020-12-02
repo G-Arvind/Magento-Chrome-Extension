@@ -92,7 +92,7 @@ class Runreindex implements HttpGetActionInterface
     {
         $result = $this->resultJsonFactory->create();
 
-        if ($this->request->getParam('ajax') || $this->request->getParam('isAjax')) {
+        if (true) {
             try {
                 $indexerCollection = $this->indexCollection->create();
                 $indexIds = $indexerCollection->getAllIds();
