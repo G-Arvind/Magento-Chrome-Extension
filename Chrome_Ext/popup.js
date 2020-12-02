@@ -28,10 +28,10 @@ $(document).ready(function() {
 
     $('#tempath_toggle').click(function() {
         if($(this).prop("checked") === true) {
-            makeAjaxCall("/ztech/index/cacheclean?enable=true");
+            makeAjaxCall("chromeext/index/enabletph?enable=1");
         }
         else {
-            makeAjaxCall("/ztech/index/cacheclean?enable=false");
+            makeAjaxCall("chromeext/index/enabletph?enable=0");
         }
     });
 
@@ -50,16 +50,16 @@ $(document).ready(function() {
     $("button").on("click", function(event) {
         switch(event.target.id) {
             case "clearCache":
-                makeAjaxCall("/ztech/index/cacheclean");
+                makeAjaxCall("chromeext/index/cacheclean");
                 break;
             case "cacheFlush":
-                makeAjaxCall("/ztech/index/cacheflush");
+                makeAjaxCall("chromeext/index/cacheflush");
                 break;
             case "reIndex":
-                makeAjaxCall("/ztech/index/runreindex");
+                makeAjaxCall("chromeext/index/runreindex");
                 break;
             case "adminPage":
-                makeAjaxCall("/ztech/index/adminPage");
+                makeAjaxCall("chromeext/index/adminPage");
                 break;
         }
     });

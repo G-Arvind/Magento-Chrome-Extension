@@ -82,8 +82,8 @@ class Enabletph implements HttpGetActionInterface
         $result = $this->resultJsonFactory->create();
 
         if (true) {
-            $enable = $this->request->getParam('enable');
-            if ($enable) {
+            $enable = (int)$this->request->getParam('enable');
+            if ($enable === 1) {
                 $this->configWriter->save('dev/debug/template_hints_storefront', 1);
             } else {
                 $this->configWriter->save('dev/debug/template_hints_storefront', 0);
