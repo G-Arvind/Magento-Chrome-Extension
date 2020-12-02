@@ -15,7 +15,6 @@ use Magento\Framework\Controller\Result\ForwardFactory;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
-use Magento\Setup\Exception;
 
 class Cacheclean implements HttpGetActionInterface
 {
@@ -74,20 +73,12 @@ class Cacheclean implements HttpGetActionInterface
         $result = $this->resultJsonFactory->create();
 
         if ($this->request->getParam('ajax') || $this->request->getParam('isAjax')) {
-            try {
-                $this->cacheManager->clean($this->cacheManager->getAvailableTypes());
-                $response [] =
-                    [
-                        'code' => "200",
-                        'message' => 'success'
-                    ];
-            } catch (Exception $e) {
-                $response [] =
-                    [
-                        'code' => "500",
-                        'message' => 'error' . json_encode($e)
-                    ];
-            }
+            $this->cacheManager->clean($this->cacheManager->getAvailableTypes());
+            $response [] =
+                [
+                    'code' => "200",
+                    'message' => 'success'
+                ];
             return $result->setData($response);
         } else {
             //redirect
