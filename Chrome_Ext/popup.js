@@ -43,10 +43,10 @@ $(document).ready(function() {
 
     $('#tempath_toggle').click(function() {
         if($(this).prop("checked") === true) {
-            makeAjaxCall("chromeext/index/enabletph?enable=1", "tempath_toggle");
+            makeAjaxCall("/chromeext/index/enabletph?enable=1", "tempath_toggle");
         }
         else {
-            makeAjaxCall("chromeext/index/enabletph?enable=0", "tempath_toggle");
+            makeAjaxCall("/chromeext/index/enabletph?enable=0", "tempath_toggle");
         }
     });
 
@@ -66,13 +66,13 @@ $(document).ready(function() {
     $("button").on("click", function(event) {
         switch(event.target.id) {
             case "clearCache":
-                makeAjaxCall("chromeext/index/cacheclean", "clearCache");
+                makeAjaxCall("/chromeext/index/cacheclean", "clearCache");
                 break;
             case "cacheFlush":
-                makeAjaxCall("chromeext/index/cacheflush", "cacheFlush");
+                makeAjaxCall("/chromeext/index/cacheflush", "cacheFlush");
                 break;
             case "reIndex":
-                makeAjaxCall("chromeext/index/runreindex", "reIndex");
+                makeAjaxCall("/chromeext/index/runreindex", "reIndex");
                 break;
             case "browserCache":
                 clearBrowserCache();
