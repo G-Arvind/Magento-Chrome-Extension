@@ -23,6 +23,14 @@ $(document).ready(function() {
     });
 
     $('.setting').click(function() {
+        $(".back-btn").toggleClass("open");
+        $(".setting").toggleClass("close");
+        $("#about").toggleClass("open");
+    });
+
+    $('.back-btn').click(function() {
+        $(".back-btn").toggleClass("open");
+        $(".setting").toggleClass("close");
         $("#about").toggleClass("open");
     });
 

@@ -27,11 +27,26 @@ body.dark {
   width: 1.2em;
   height: 1.2em;
 }
-.setting:hover {
+.setting:hover, .back-btn:hover {
   cursor: pointer;
 }
-.dark .setting {
+.dark .setting,.dark .back-btn {
   fill: #fff;
+}
+
+.back-btn.open{
+  left: -7%;
+}
+.setting.close {
+  left: -127%;
+}
+
+.back-btn { 
+  position: absolute;
+  top: -8%;
+  left: -127%;
+  width: 1.2em;
+  height: 1.2em;
 }
 
 .heading {
