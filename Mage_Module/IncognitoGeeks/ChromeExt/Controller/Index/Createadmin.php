@@ -1,12 +1,13 @@
 <?php
 /**
- * Perform ReIndex
+ * Create Magento Admin user
  *
  */
 declare(strict_types=1);
 
-namespace Ztech\ChromeExt\Controller\Index;
+namespace IncognitoGeeks\ChromeExt\Controller\Index;
 
+use Exception;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Cache\Manager;
 use Magento\Framework\App\RequestInterface;
@@ -15,11 +16,10 @@ use Magento\Framework\Controller\Result\ForwardFactory;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
-use Magento\Indexer\Model\Indexer\CollectionFactory;
-use Magento\Indexer\Model\IndexerFactory;
-use Magento\Setup\Exception;
+use Magento\User\Model\ResourceModel\User;
+use Magento\User\Model\UserFactory;
 
-class Runreindex implements HttpGetActionInterface
+class Createadmin implements HttpGetActionInterface
 {
     /**
      * @var PageFactory
@@ -47,24 +47,24 @@ class Runreindex implements HttpGetActionInterface
     private $request;
 
     /**
-     * @var IndexerFactory
+     * @var UserFactory
      */
-    private $indexerFactory;
+    private $userFactory;
 
     /**
-     * @var CollectionFactory
+     * @var User
      */
-    private $indexCollection;
+    private $userResource;
 
     /**
-     * Runreindex constructor.
+     * Cacheclean constructor.
      * @param PageFactory $pageFactory
      * @param JsonFactory $resultJsonFactory
      * @param Manager $cacheManager
      * @param ForwardFactory $forwardFactory
      * @param RequestInterface $request
-     * @param IndexerFactory $indexerFactory
-     * @param CollectionFactory $indexCollection
+     * @param UserFactory $userFactory
+     * @param User $userResource
      */
     public function __construct(
         PageFactory $pageFactory,
@@ -72,34 +72,42 @@ class Runreindex implements HttpGetActionInterface
         Manager $cacheManager,
         ForwardFactory $forwardFactory,
         RequestInterface $request,
-        IndexerFactory $indexerFactory,
-        CollectionFactory $indexCollection
+        UserFactory $userFactory,
+        User $userResource
     ) {
         $this->_pageFactory = $pageFactory;
         $this->resultJsonFactory = $resultJsonFactory;
         $this->cacheManager = $cacheManager;
         $this->forwardFactory = $forwardFactory;
         $this->request = $request;
-        $this->indexerFactory = $indexerFactory;
-        $this->indexCollection = $indexCollection;
+        $this->userFactory = $userFactory;
+        $this->userResource = $userResource;
     }
 
     /**
      * @return Forward|Json
-     * @throws \Throwable
      */
     public function execute()
     {
         $result = $this->resultJsonFactory->create();
 
         if (true) {
+            $adminInfo = [
+                'username'  => $this->request->getParam('userName'),
+                'firstname' => $this->request->getParam('firstName'),
+                'lastname'  => $this->request->getParam('lastName'),
+                'email'     => $this->request->getParam('email'),
+                'password'  => $this->request->getParam('password'),
+                'interface_locale' => 'en_US',
+                'is_active' => 1
+            ];
+
+            $userModel = $this->userFactory->create();
+            $userModel->setData($adminInfo);
+            $userModel->setRoleId(1);
+
             try {
-                $indexerCollection = $this->indexCollection->create();
-                $indexIds = $indexerCollection->getAllIds();
-                foreach ($indexIds as $indexId) {
-                    $indexIdArray = $this->indexerFactory->create()->load($indexId);
-                    $indexIdArray->reindexAll($indexId);
-                }
+                $this->userResource->save($userModel);
                 $response [] =
                     [
                         'code' => "200",

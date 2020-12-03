@@ -5,7 +5,7 @@
  */
 declare(strict_types=1);
 
-namespace Ztech\ChromeExt\Controller\Index;
+namespace IncognitoGeeks\ChromeExt\Controller\Index;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Cache\Manager;
