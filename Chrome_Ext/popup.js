@@ -8,6 +8,10 @@ $(document).ready(function() {
         $("body").addClass("dark");
     }
 
+    if(parseInt(window.localStorage.getItem("tph"))) {
+        $('#tempath_toggle').prop('checked', true);
+    }
+
     function isUrlValid(url) {
         return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
     }
@@ -37,10 +41,10 @@ $(document).ready(function() {
 
     $('#tempath_toggle').click(function() {
         if($(this).prop("checked") === true) {
-            makeAjaxCall("chromeext/index/enabletph?enable=1");
+            makeAjaxCall("chromeext/index/enabletph?enable=1", "tempath_toggle");
         }
         else {
-            makeAjaxCall("chromeext/index/enabletph?enable=0");
+            makeAjaxCall("chromeext/index/enabletph?enable=0", "tempath_toggle");
         }
     });
 
@@ -67,26 +71,47 @@ $(document).ready(function() {
             case "reIndex":
                 makeAjaxCall("chromeext/index/runreindex", "reIndex");
                 break;
-            case "adminPage":
-                makeAjaxCall("chromeext/index/adminPage", "adminPage");
+            case "browserCache":
+                clearBrowserCache();
                 break;
         }
     });
 
     function makeAjaxCall(route, loaderDiv = null) {
-        $("#"+loaderDiv).append(constructLoader());
-        $("#"+loaderDiv).prop('disabled', true);
+        if(loaderDiv != 'tempath_toggle') {
+            $("#"+loaderDiv).append(constructLoader());
+            $("#"+loaderDiv).prop('disabled', true);
+        }
         $.ajax({
             url: ajaxUrl + route,
             type: 'GET',
             success: function(response) {
                 console.log("Response ", response);
+                if(loaderDiv != 'tempath_toggle') {
+                    $("#" + loaderDiv + " .loader").remove();
+                    $("#" + loaderDiv).prop('disabled', false);
+                } else {
+                    if(route.indexOf("enable=1") !== -1) {
+                        localStorage.setItem("tph", 1);
+                    }else {
+                        localStorage.setItem("tph", 0);
+                    }
+                    chrome.tabs.getSelected(null, function(tab) {
+                        var code = 'window.location.reload();';
+                        chrome.tabs.executeScript(tab.id, {code: code});
+                    });
+                }
+                MessageHelper.succesMsgHandler(response);
             },
             error: function (error) {
                 console.log("error", error);
                 setTimeout(function() {
-                    $("#"+loaderDiv + " .loader").remove();
-                    $("#"+loaderDiv).prop('disabled', false);
+                    if(loaderDiv != 'tempath_toggle') {
+                        $("#" + loaderDiv + " .loader").remove();
+                        $("#" + loaderDiv).prop('disabled', false);
+                    }else {
+                        $("#" + loaderDiv).prop("checked", false);
+                    }
                     MessageHelper.errorMsgHandler(error);
                 }, 2000);
             }
@@ -97,6 +122,18 @@ $(document).ready(function() {
         return `<div class="loader"></div>`;
     }
 
+    function clearBrowserCache() {
+        var millisecondsPerWeek = 1000 * 60 * 60 * 24 * 7;
+        var oneWeekAgo = (new Date()).getTime() - millisecondsPerWeek;
+        chrome.browsingData.remove({
+            "since": oneWeekAgo
+        }, {
+            "appcache": true,
+            "cache": true,
+            "cacheStorage": true,
+            "cookies": true
+        }, MessageHelper.succesMsgHandler("sucess"));
+    }
 });
 
 
