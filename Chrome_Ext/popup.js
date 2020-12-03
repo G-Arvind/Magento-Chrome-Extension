@@ -2,6 +2,7 @@ $(document).ready(function() {
 
     $('#url').val(window.localStorage.getItem("mageExtBaseUrl"));
     let ajaxUrl = $('#url').val();
+    
     if(parseInt(window.localStorage.getItem("dark"))) {
         $('#dark_toggle').prop('checked', true);
         $("body").addClass("dark");
@@ -58,31 +59,63 @@ $(document).ready(function() {
     $("button").on("click", function(event) {
         switch(event.target.id) {
             case "clearCache":
-                makeAjaxCall("chromeext/index/cacheclean");
+                makeAjaxCall("chromeext/index/cacheclean", "clearCache");
                 break;
             case "cacheFlush":
-                makeAjaxCall("chromeext/index/cacheflush");
+                makeAjaxCall("chromeext/index/cacheflush", "cacheFlush");
                 break;
             case "reIndex":
-                makeAjaxCall("chromeext/index/runreindex");
+                makeAjaxCall("chromeext/index/runreindex", "reIndex");
                 break;
             case "adminPage":
-                makeAjaxCall("chromeext/index/adminPage");
+                makeAjaxCall("chromeext/index/adminPage", "adminPage");
                 break;
         }
     });
 
-    function makeAjaxCall(route) {
+    function makeAjaxCall(route, loaderDiv = null) {
+        $("#"+loaderDiv).append(constructLoader());
+        $("#"+loaderDiv).prop('disabled', true);
         $.ajax({
             url: ajaxUrl + route,
             type: 'GET',
-            complete: function(response) {
+            success: function(response) {
                 console.log("Response ", response);
             },
             error: function (error) {
                 console.log("error", error);
+                setTimeout(function() {
+                    $("#"+loaderDiv + " .loader").remove();
+                    $("#"+loaderDiv).prop('disabled', false);
+                    MessageHelper.errorMsgHandler(error);
+                }, 2000);
             }
         });
     }
 
+    function constructLoader() {
+        return `<div class="loader"></div>`;
+    }
+
 });
+
+
+MessageHelper = {
+    succesMsgHandler: function() {
+        $("#msg").addClass("success_msg");
+        $("#msg strong").text("Success!");
+        $("#msg span").text("");
+        setTimeout(function() {
+            $("#msg").removeClass("success_msg");
+        }, 5000);
+    },
+
+    errorMsgHandler: function(error) {
+        $("#msg").addClass("error_msg");
+        $("#msg strong").text("Error");
+        $("#msg span").text("Internal Server error");
+        setTimeout(function() {
+            $("#msg").removeClass("error_msg");
+        }, 5000);
+    }
+}
