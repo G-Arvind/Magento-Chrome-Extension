@@ -12,6 +12,8 @@ $(document).ready(function() {
         $('#tempath_toggle').prop('checked', true);
     }
 
+    testConnection();
+
     function isUrlValid(url) {
         return /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(url);
     }
@@ -48,16 +50,17 @@ $(document).ready(function() {
         }
     });
 
-    $('#url').keyup(function(event) {
+    $("#url").focusout(function(){
         var input = $(this);
         var url = $(this).val();
         if(isUrlValid(url)) {
             ajaxUrl = url;
             window.localStorage.setItem("mageExtBaseUrl", url);
             input.removeClass("invalid").addClass("valid");
+            testConnection();
         } else {
             input.removeClass("valid").addClass("invalid");
-        }	
+        }
     });
 
     $("button").on("click", function(event) {
@@ -120,6 +123,22 @@ $(document).ready(function() {
 
     function constructLoader() {
         return `<div class="loader"></div>`;
+    }
+
+    function testConnection(){
+        $.ajax({
+            url: ajaxUrl + "/chromeext/index/testconnection",
+            type: 'GET',
+            success: function(response) {
+                console.log("Response ", response);
+                $("#current_status").text("Connection Established!");
+            },
+            error: function (error) {
+                console.log("error", error);
+                $("#current_status").text("Connection Failed");
+            }
+        });
+
     }
 
     function clearBrowserCache() {
