@@ -1,14 +1,11 @@
 {
-  "name": "IncognitoGeeks/hello-world",
+  "name": "IncognitoGeeks/chrome-ext",
   "version": "1.0.0",
-  "description": "N/A",
+  "description": "Magento 2 developer module for supporting browser extension",
   "type": "magento2-module",
   "require": {
-    "magento/framework": "*"
+    "magento/framework": ">=102.0.1"
   },
-  "license": [
-    "Proprietary"
-  ],
   "autoload": {
     "files": [
       "registration.php"
