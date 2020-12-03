@@ -312,6 +312,19 @@ body.dark {
   border-top-color: #5C5EDC;
 }
 
+#current_status.success{
+  color: green;
+}
+#current_status.failure{
+  color: red;
+}
+.dark #current_status.success{
+  color: lightgreen;
+}
+.dark #current_status.failure{
+  color: lightcoral;
+}
+
 /* Safari */
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }

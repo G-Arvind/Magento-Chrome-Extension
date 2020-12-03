@@ -59,6 +59,9 @@ $(document).ready(function() {
             input.removeClass("invalid").addClass("valid");
             testConnection();
         } else {
+            $("#current_status").text("Connection Failed");
+            $("#current_status").removeClass("success");
+            $("#current_status").addClass("failure");
             input.removeClass("valid").addClass("invalid");
         }
     });
@@ -132,10 +135,14 @@ $(document).ready(function() {
             success: function(response) {
                 console.log("Response ", response);
                 $("#current_status").text("Connection Established!");
+                $("#current_status").removeClass("failure");
+                $("#current_status").addClass("success");
             },
             error: function (error) {
                 console.log("error", error);
                 $("#current_status").text("Connection Failed");
+                $("#current_status").removeClass("success");
+                $("#current_status").addClass("failure");
             }
         });
 
