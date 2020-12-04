@@ -75,7 +75,8 @@ $(document).ready(function() {
 	function closeTour(steps, wrapper, layer) {
 		steps.removeClass('selected');
 		wrapper.removeClass('active');
-		layer.removeClass('show');
+        layer.removeClass('show');
+        localStorage.setItem("firstTime", true)
 	}
 
 });
