@@ -122,6 +122,7 @@
     opacity: 0;
     background-color: #fefffb;
     border-color: #fefffb;
+    text-align: left;
 }
 
 .dark .single-step .more-info {

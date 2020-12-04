@@ -76,7 +76,7 @@ $(document).ready(function() {
 		steps.removeClass('selected');
 		wrapper.removeClass('active');
         layer.removeClass('show');
-        localStorage.setItem("firstTime", true)
+        localStorage.setItem("firstTime", true);
 	}
 
 });
